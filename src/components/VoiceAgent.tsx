@@ -1,4 +1,3 @@
-
 import React, { useState, useRef, useEffect } from 'react';
 import { Mic, MicOff, Phone, PhoneOff } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -16,7 +15,7 @@ const VoiceAgent = () => {
   const [errorMessage, setErrorMessage] = useState('');
   const vapiRef = useRef<VapiInstance | null>(null);
 
-  // Meditation assistant configuration - fixed type issues
+  // Updated meditation assistant configuration with compatible settings
   const assistantOptions = {
     name: "Peaceful Mind Assistant",
     firstMessage: "Hello, I'm your meditation guide. How are you feeling today? I'm here to help you find peace and tranquility.",
@@ -26,12 +25,12 @@ const VoiceAgent = () => {
       language: "en-US" as const,
     },
     voice: {
-      provider: "playht" as const,
-      voiceId: "s3://voice-cloning-zero-shot/775ae416-49bb-4fb6-bd45-740f205d20a1/jennifer/manifest.json",
+      provider: "11labs" as const,
+      voiceId: "pNInz6obpgDQGcFmaJgB", // Adam voice - a calm, soothing voice
     },
     model: {
       provider: "openai" as const,
-      model: "gpt-4" as const,
+      model: "gpt-4o-mini" as const,
       messages: [
         {
           role: "system" as const,
@@ -69,7 +68,6 @@ Remember: This is a voice conversation, so keep your guidance natural, flowing, 
         },
       ],
     },
-    // Add required properties for CreateAssistantDTO
     clientMessages: [],
     serverMessages: []
   };
@@ -117,10 +115,12 @@ Remember: This is a voice conversation, so keep your guidance natural, flowing, 
 
       vapiInstance.on('speech-start', () => {
         setIsSpeaking(true);
+        console.log('Agent started speaking');
       });
 
       vapiInstance.on('speech-end', () => {
         setIsSpeaking(false);
+        console.log('Agent stopped speaking');
       });
 
       vapiInstance.on('volume-level', (level: number) => {
@@ -132,12 +132,15 @@ Remember: This is a voice conversation, so keep your guidance natural, flowing, 
         setConnectionStatus('error');
         setIsConnected(false);
         
-        if (error?.error?.message?.includes('card details')) {
+        // Handle specific error types
+        if (error?.error?.type === 'ejected') {
+          setErrorMessage('Session was ended unexpectedly. This might be due to configuration issues or account limits.');
+        } else if (error?.error?.message?.includes('card details')) {
           setErrorMessage('Payment required. Visit the Vapi dashboard to set up your payment method.');
         } else if (error?.error?.statusCode === 401 || error?.error?.statusCode === 403) {
           setErrorMessage('API key is invalid. Please check your API key.');
         } else {
-          setErrorMessage(error?.error?.message || 'An error occurred during the session');
+          setErrorMessage(error?.error?.message || error?.errorMsg || 'An error occurred during the session');
         }
       });
 
