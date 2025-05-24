@@ -1,4 +1,3 @@
-
 import React, { useState, useRef, useEffect } from 'react';
 import { Mic, MicOff, Phone, PhoneOff } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -16,7 +15,7 @@ const VoiceAgent = () => {
   const [errorMessage, setErrorMessage] = useState('');
   const vapiRef = useRef<VapiInstance | null>(null);
 
-  // Meditation assistant configuration
+  // Meditation assistant configuration - corrected structure
   const assistantOptions = {
     name: "Peaceful Mind Assistant",
     firstMessage: "Hello, I'm your meditation guide. How are you feeling today? I'm here to help you find peace and tranquility.",
@@ -69,6 +68,9 @@ Remember: This is a voice conversation, so keep your guidance natural, flowing, 
         },
       ],
     },
+    // Add required properties for CreateAssistantDTO
+    clientMessages: [],
+    serverMessages: []
   };
 
   // Initialize Vapi
