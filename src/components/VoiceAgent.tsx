@@ -1,3 +1,4 @@
+
 import React, { useState, useRef, useEffect } from 'react';
 import { Mic, MicOff, Phone, PhoneOff } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -15,18 +16,18 @@ const VoiceAgent = () => {
   const [errorMessage, setErrorMessage] = useState('');
   const vapiRef = useRef<VapiInstance | null>(null);
 
-  // Updated meditation assistant configuration with compatible settings
+  // Updated meditation assistant configuration with requested settings
   const assistantOptions = {
     name: "Peaceful Mind Assistant",
     firstMessage: "Hello, I'm your meditation guide. How are you feeling today? I'm here to help you find peace and tranquility.",
     transcriber: {
       provider: "deepgram" as const,
-      model: "nova-2" as const,
-      language: "en-US" as const,
+      model: "nova-3" as const,
+      language: "en" as const,
     },
     voice: {
-      provider: "11labs" as const,
-      voiceId: "pNInz6obpgDQGcFmaJgB", // Adam voice - a calm, soothing voice
+      provider: "vapi" as const,
+      voiceId: "Hana",
     },
     model: {
       provider: "openai" as const,
