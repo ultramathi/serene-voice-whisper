@@ -1,3 +1,4 @@
+
 import React, { useState, useRef, useEffect } from 'react';
 import { Mic, MicOff, Phone, PhoneOff } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -15,25 +16,25 @@ const VoiceAgent = () => {
   const [errorMessage, setErrorMessage] = useState('');
   const vapiRef = useRef<VapiInstance | null>(null);
 
-  // Meditation assistant configuration - corrected structure
+  // Meditation assistant configuration - fixed type issues
   const assistantOptions = {
     name: "Peaceful Mind Assistant",
     firstMessage: "Hello, I'm your meditation guide. How are you feeling today? I'm here to help you find peace and tranquility.",
     transcriber: {
-      provider: "deepgram",
-      model: "nova-2",
-      language: "en-US",
+      provider: "deepgram" as const,
+      model: "nova-2" as const,
+      language: "en-US" as const,
     },
     voice: {
-      provider: "playht",
+      provider: "playht" as const,
       voiceId: "s3://voice-cloning-zero-shot/775ae416-49bb-4fb6-bd45-740f205d20a1/jennifer/manifest.json",
     },
     model: {
-      provider: "openai",
-      model: "gpt-4",
+      provider: "openai" as const,
+      model: "gpt-4" as const,
       messages: [
         {
-          role: "system",
+          role: "system" as const,
           content: `You are Peaceful Mind, a compassionate AI meditation and wellness guide. Your purpose is to help users find tranquility, reduce stress, and cultivate mindfulness through gentle guidance and supportive conversation.
 
 **Your Core Qualities:**
