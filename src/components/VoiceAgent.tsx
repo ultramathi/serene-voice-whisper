@@ -4,68 +4,165 @@ import { Mic, MicOff, Phone, PhoneOff } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import type { VapiInstance } from '../types/vapi';
 
 const VoiceAgent = () => {
   const [isConnected, setIsConnected] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
   const [connectionStatus, setConnectionStatus] = useState('disconnected');
   const [apiKey, setApiKey] = useState('');
-  const vapiRef = useRef<any>(null);
+  const [isSpeaking, setIsSpeaking] = useState(false);
+  const [volumeLevel, setVolumeLevel] = useState(0);
+  const [errorMessage, setErrorMessage] = useState('');
+  const vapiRef = useRef<VapiInstance | null>(null);
+
+  // Meditation assistant configuration
+  const assistantOptions = {
+    name: "Peaceful Mind Assistant",
+    firstMessage: "Hello, I'm your meditation guide. How are you feeling today? I'm here to help you find peace and tranquility.",
+    transcriber: {
+      provider: "deepgram",
+      model: "nova-2",
+      language: "en-US",
+    },
+    voice: {
+      provider: "playht",
+      voiceId: "s3://voice-cloning-zero-shot/775ae416-49bb-4fb6-bd45-740f205d20a1/jennifer/manifest.json",
+    },
+    model: {
+      provider: "openai",
+      model: "gpt-4",
+      messages: [
+        {
+          role: "system",
+          content: `You are Peaceful Mind, a compassionate AI meditation and wellness guide. Your purpose is to help users find tranquility, reduce stress, and cultivate mindfulness through gentle guidance and supportive conversation.
+
+**Your Core Qualities:**
+- Speak with a warm, soothing, and empathetic tone
+- Use calming language that promotes relaxation
+- Be patient and understanding, never rushing the user
+- Offer gentle encouragement and positive affirmations
+- Maintain a peaceful, grounded presence
+
+**Your Capabilities:**
+1. **Guided Meditations**: Lead users through various meditation practices (breathing, body scan, loving-kindness, etc.)
+2. **Breathing Exercises**: Guide users through calming breath work techniques
+3. **Stress Relief**: Offer immediate support for anxiety or stress
+4. **Sleep Assistance**: Help users prepare for restful sleep
+5. **Mindfulness Practices**: Teach present-moment awareness techniques
+6. **Emotional Support**: Listen compassionately and offer gentle guidance
+
+**Communication Style:**
+- Keep responses conversational and naturally paced for voice interaction
+- Use simple, clear language that's easy to follow
+- Include natural pauses in guided practices (use "..." to indicate pauses)
+- Ask gentle, open-ended questions to understand their needs
+- Avoid long explanations - focus on practical, immediate guidance
+
+**Session Flow:**
+1. Begin by checking in on their current state and needs
+2. Offer appropriate guidance based on their response
+3. Provide practical exercises they can do right now
+4. Close with encouragement and positive affirmations
+
+Remember: This is a voice conversation, so keep your guidance natural, flowing, and easy to follow. You're creating a safe, peaceful space for the user to find their center.`,
+        },
+      ],
+    },
+  };
 
   // Initialize Vapi
   useEffect(() => {
-    if (typeof window !== 'undefined' && window.vapi) {
-      console.log('Vapi SDK loaded');
+    if (typeof window !== 'undefined') {
+      import('@vapi-ai/web').then((module) => {
+        console.log('Vapi SDK loaded successfully');
+      }).catch(error => {
+        console.error('Failed to load Vapi SDK:', error);
+      });
     }
   }, []);
 
   const startCall = async () => {
     if (!apiKey.trim()) {
-      alert('Please enter your Vapi.ai API key first');
+      setErrorMessage('Please enter your Vapi.ai API key first');
       return;
     }
 
     try {
-      // This is where you would initialize Vapi with your specific agent configuration
-      console.log('Starting meditation session with Vapi.ai...');
       setConnectionStatus('connecting');
-      
-      // Simulate connection for demo purposes
-      // In real implementation, you would use:
-      // const vapi = new Vapi(apiKey);
-      // await vapi.start(assistantId);
-      
-      setTimeout(() => {
+      setErrorMessage('');
+      console.log('Starting meditation session with Vapi.ai...');
+
+      // Import and initialize Vapi
+      const { default: Vapi } = await import('@vapi-ai/web');
+      const vapiInstance = new Vapi(apiKey);
+      vapiRef.current = vapiInstance;
+
+      // Set up event listeners
+      vapiInstance.on('call-start', () => {
         setIsConnected(true);
         setConnectionStatus('connected');
         console.log('Connected to meditation agent');
-      }, 2000);
+      });
+
+      vapiInstance.on('call-end', () => {
+        setIsConnected(false);
+        setConnectionStatus('disconnected');
+        setIsSpeaking(false);
+        console.log('Meditation session ended');
+      });
+
+      vapiInstance.on('speech-start', () => {
+        setIsSpeaking(true);
+      });
+
+      vapiInstance.on('speech-end', () => {
+        setIsSpeaking(false);
+      });
+
+      vapiInstance.on('volume-level', (level: number) => {
+        setVolumeLevel(level);
+      });
+
+      vapiInstance.on('error', (error: any) => {
+        console.error('Vapi error:', error);
+        setConnectionStatus('error');
+        setIsConnected(false);
+        
+        if (error?.error?.message?.includes('card details')) {
+          setErrorMessage('Payment required. Visit the Vapi dashboard to set up your payment method.');
+        } else if (error?.error?.statusCode === 401 || error?.error?.statusCode === 403) {
+          setErrorMessage('API key is invalid. Please check your API key.');
+        } else {
+          setErrorMessage(error?.error?.message || 'An error occurred during the session');
+        }
+      });
+
+      // Start the call
+      await vapiInstance.start(assistantOptions);
 
     } catch (error) {
       console.error('Failed to start meditation session:', error);
       setConnectionStatus('error');
+      setErrorMessage('Failed to connect. Please check your API key and try again.');
     }
   };
 
   const endCall = () => {
     console.log('Ending meditation session...');
-    setIsConnected(false);
-    setConnectionStatus('disconnected');
-    
-    // In real implementation:
-    // if (vapiRef.current) {
-    //   vapiRef.current.stop();
-    // }
+    if (vapiRef.current) {
+      vapiRef.current.stop();
+    }
   };
 
   const toggleMute = () => {
-    setIsMuted(!isMuted);
-    console.log(`Microphone ${!isMuted ? 'muted' : 'unmuted'}`);
+    const newMutedState = !isMuted;
+    setIsMuted(newMutedState);
+    console.log(`Microphone ${newMutedState ? 'muted' : 'unmuted'}`);
     
-    // In real implementation:
-    // if (vapiRef.current) {
-    //   vapiRef.current.setMuted(!isMuted);
-    // }
+    if (vapiRef.current) {
+      vapiRef.current.setMuted(newMutedState);
+    }
   };
 
   const getStatusColor = () => {
@@ -110,6 +207,22 @@ const VoiceAgent = () => {
                 </p>
               </div>
             )}
+
+            {errorMessage && (
+              <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg max-w-md mx-auto">
+                <p className="text-sm">{errorMessage}</p>
+                {errorMessage.includes('payment') && (
+                  <a
+                    href="https://dashboard.vapi.ai"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-red-600 hover:text-red-800 underline text-sm mt-2 inline-block"
+                  >
+                    Go to Vapi Dashboard
+                  </a>
+                )}
+              </div>
+            )}
           </div>
 
           <div className="flex justify-center space-x-4">
@@ -149,8 +262,26 @@ const VoiceAgent = () => {
             <div className="mt-6 p-6 bg-gradient-to-r from-green-50 to-blue-50 rounded-2xl">
               <div className="flex items-center justify-center space-x-2 mb-3">
                 <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
-                <span className="text-green-700 font-medium">Session Active</span>
+                <span className="text-green-700 font-medium">
+                  {isSpeaking ? 'Guide is speaking' : 'Session Active'}
+                </span>
               </div>
+              
+              {volumeLevel > 0 && (
+                <div className="flex justify-center mb-3">
+                  <div className="flex gap-1">
+                    {Array.from({ length: 10 }, (_, i) => (
+                      <div
+                        key={i}
+                        className={`w-2 h-4 rounded-sm transition-all ${
+                          i / 10 < volumeLevel ? 'bg-green-500' : 'bg-gray-300'
+                        }`}
+                      />
+                    ))}
+                  </div>
+                </div>
+              )}
+              
               <p className="text-gray-600">
                 Your meditation guide is listening. Speak naturally about what's on your mind, 
                 or ask for a guided meditation, breathing exercise, or relaxation technique.
