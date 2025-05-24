@@ -1,4 +1,3 @@
-
 import React, { useState, useRef, useEffect } from 'react';
 import { Mic, MicOff, Phone, PhoneOff } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -27,7 +26,7 @@ const VoiceAgent = () => {
     },
     voice: {
       provider: "vapi" as const,
-      voiceId: "Hana",
+      voiceId: "Hana" as const,
     },
     model: {
       provider: "openai" as const,
