@@ -12,6 +12,20 @@ const MeditationHeader = () => {
           <Sparkles className="w-6 h-6 text-pink-400 absolute -bottom-1 -right-1 animate-pulse delay-300" />
         </div>
       </div>
+      
+      <div className="mb-8">
+        <video 
+          autoPlay 
+          muted 
+          loop 
+          playsInline
+          className="w-full max-w-2xl mx-auto rounded-2xl shadow-lg"
+        >
+          <source src="https://vapi.mathivanan.com/video%20(41).mp4" type="video/mp4" />
+          Your browser does not support the video tag.
+        </video>
+      </div>
+      
       <h1 className="text-5xl font-light text-gray-800 mb-4 tracking-wide">
         Peaceful Mind
       </h1>
