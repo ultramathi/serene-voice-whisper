@@ -7,11 +7,20 @@ import ConnectionStatus from './ConnectionStatus';
 import ApiKeyInput from './ApiKeyInput';
 import ConnectionControls from './ConnectionControls';
 import SessionStatus from './SessionStatus';
+import ChatWindow from './ChatWindow';
 import { useVapiConnection } from '../hooks/useVapiConnection';
+
+interface Message {
+  id: string;
+  text: string;
+  sender: 'user' | 'agent';
+  timestamp: Date;
+}
 
 const VoiceAgent = () => {
   const [apiKey, setApiKey] = useState('');
   const [selectedVoice, setSelectedVoice] = useState('Hana');
+  const [messages, setMessages] = useState<Message[]>([]);
   
   const {
     isConnected,
@@ -23,10 +32,39 @@ const VoiceAgent = () => {
     startCall,
     endCall,
     toggleMute,
+    sendMessage,
   } = useVapiConnection();
 
   const handleStartCall = () => {
     startCall(apiKey, selectedVoice);
+    setMessages([]); // Clear previous messages when starting a new session
+  };
+
+  const handleSendMessage = (messageText: string) => {
+    // Add user message to chat
+    const userMessage: Message = {
+      id: Date.now().toString(),
+      text: messageText,
+      sender: 'user',
+      timestamp: new Date(),
+    };
+    setMessages(prev => [...prev, userMessage]);
+
+    // Send message through Vapi
+    if (sendMessage) {
+      sendMessage(messageText);
+    }
+  };
+
+  const handleAgentMessage = (messageText: string) => {
+    // Add agent message to chat
+    const agentMessage: Message = {
+      id: Date.now().toString() + '_agent',
+      text: messageText,
+      sender: 'agent',
+      timestamp: new Date(),
+    };
+    setMessages(prev => [...prev, agentMessage]);
   };
 
   return (
@@ -39,40 +77,48 @@ const VoiceAgent = () => {
         disabled={isConnected}
       />
       
-      <Card className="mb-8 shadow-xl border-0 bg-white/80 backdrop-blur-sm">
-        <CardContent className="p-8">
-          <div className="text-center space-y-6">
-            <div className="space-y-4">
-              <ConnectionStatus connectionStatus={connectionStatus} />
-              
-              {!isConnected && (
-                <ApiKeyInput
-                  apiKey={apiKey}
-                  onApiKeyChange={setApiKey}
-                  errorMessage={errorMessage}
-                />
-              )}
-            </div>
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+        <Card className="shadow-xl border-0 bg-white/80 backdrop-blur-sm">
+          <CardContent className="p-8">
+            <div className="text-center space-y-6">
+              <div className="space-y-4">
+                <ConnectionStatus connectionStatus={connectionStatus} />
+                
+                {!isConnected && (
+                  <ApiKeyInput
+                    apiKey={apiKey}
+                    onApiKeyChange={setApiKey}
+                    errorMessage={errorMessage}
+                  />
+                )}
+              </div>
 
-            <div className="flex justify-center space-x-4">
-              <ConnectionControls
+              <div className="flex justify-center space-x-4">
+                <ConnectionControls
+                  isConnected={isConnected}
+                  isMuted={isMuted}
+                  connectionStatus={connectionStatus}
+                  onStartCall={handleStartCall}
+                  onEndCall={endCall}
+                  onToggleMute={toggleMute}
+                />
+              </div>
+
+              <SessionStatus
                 isConnected={isConnected}
-                isMuted={isMuted}
-                connectionStatus={connectionStatus}
-                onStartCall={handleStartCall}
-                onEndCall={endCall}
-                onToggleMute={toggleMute}
+                isSpeaking={isSpeaking}
+                volumeLevel={volumeLevel}
               />
             </div>
+          </CardContent>
+        </Card>
 
-            <SessionStatus
-              isConnected={isConnected}
-              isSpeaking={isSpeaking}
-              volumeLevel={volumeLevel}
-            />
-          </div>
-        </CardContent>
-      </Card>
+        <ChatWindow
+          isConnected={isConnected}
+          onSendMessage={handleSendMessage}
+          messages={messages}
+        />
+      </div>
     </div>
   );
 };
