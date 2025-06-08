@@ -15,12 +15,12 @@ export interface Voice {
 
 export const voices: Voice[] = [
   {
-    id: "Rohan",
-    name: "Rohan",
-    gender: "Male",
-    accent: "Indian American",
-    age: "24",
-    characteristics: "Bright, optimistic, cheerful, energetic"
+    id: "Hana",
+    name: "Hana",
+    gender: "Female",
+    accent: "American",
+    age: "22",
+    characteristics: "Soft, soothing, gentle"
   },
   {
     id: "Neha",
@@ -31,60 +31,12 @@ export const voices: Voice[] = [
     characteristics: "Professional, charming"
   },
   {
-    id: "Hana",
-    name: "Hana",
-    gender: "Female",
-    accent: "American",
-    age: "22",
-    characteristics: "Soft, soothing, gentle"
-  },
-  {
-    id: "Harry",
-    name: "Harry",
-    gender: "Male",
-    accent: "American",
-    age: "24",
-    characteristics: "Clear, energetic, professional"
-  },
-  {
-    id: "Elliot",
-    name: "Elliot",
-    gender: "Male",
-    accent: "Canadian",
-    age: "25",
-    characteristics: "Soothing, friendly, professional"
-  },
-  {
-    id: "Lily",
-    name: "Lily",
-    gender: "Female",
-    accent: "Asian American",
-    age: "25",
-    characteristics: "Bright personality, bubbly, cheerful"
-  },
-  {
-    id: "Paige",
-    name: "Paige",
-    gender: "Female",
-    accent: "American",
-    age: "26",
-    characteristics: "Deeper tone, calming, professional"
-  },
-  {
     id: "Cole",
     name: "Cole",
     gender: "Male",
     accent: "American",
     age: "22",
     characteristics: "Deeper tone, calming, professional"
-  },
-  {
-    id: "Savannah",
-    name: "Savannah",
-    gender: "Female",
-    accent: "American (Southern)",
-    age: "25",
-    characteristics: "Southern American accent"
   },
   {
     id: "Spencer",

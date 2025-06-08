@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import VoiceSelector from './VoiceSelector';
+import VideoCarousel from './VideoCarousel';
 import ConnectionStatus from './ConnectionStatus';
 import ApiKeyInput from './ApiKeyInput';
 import ConnectionControls from './ConnectionControls';
@@ -30,6 +31,8 @@ const VoiceAgent = () => {
 
   return (
     <div>
+      <VideoCarousel />
+      
       <VoiceSelector
         selectedVoice={selectedVoice}
         onVoiceChange={setSelectedVoice}
