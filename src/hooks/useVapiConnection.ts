@@ -72,6 +72,7 @@ export const useVapiConnection = () => {
       vapiInstance.on('message', (message: any) => {
         console.log('Received message:', message);
         if (message.type === 'transcript' && message.role === 'assistant' && message.transcript) {
+          console.log('Agent message:', message.transcript);
           if (onMessageReceived) {
             onMessageReceived(message.transcript);
           }
@@ -126,14 +127,21 @@ export const useVapiConnection = () => {
   const sendMessage = (message: string) => {
     if (vapiRef.current && isConnected) {
       console.log('Sending text message:', message);
-      // Send message to Vapi (this simulates speaking the message)
-      vapiRef.current.send({
-        type: 'add-message',
-        message: {
-          role: 'user',
-          content: message,
-        },
-      });
+      // Use the correct method to send text input to Vapi
+      try {
+        vapiRef.current.sendTextToAssistant(message);
+      } catch (error) {
+        console.error('Error sending message:', error);
+        // Fallback method if sendTextToAssistant doesn't exist
+        try {
+          (vapiRef.current as any).addMessage({
+            role: 'user',
+            content: message,
+          });
+        } catch (fallbackError) {
+          console.error('Fallback message sending also failed:', fallbackError);
+        }
+      }
     }
   };
 

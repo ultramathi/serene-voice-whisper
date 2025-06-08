@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import VoiceSelector from './VoiceSelector';
 import VideoCarousel from './VideoCarousel';
@@ -33,7 +33,15 @@ const VoiceAgent = () => {
     endCall,
     toggleMute,
     sendMessage,
+    setOnMessageReceived,
   } = useVapiConnection();
+
+  // Set up the message handler when component mounts
+  useEffect(() => {
+    setOnMessageReceived((messageText: string) => {
+      handleAgentMessage(messageText);
+    });
+  }, []);
 
   const handleStartCall = () => {
     startCall(apiKey, selectedVoice);
