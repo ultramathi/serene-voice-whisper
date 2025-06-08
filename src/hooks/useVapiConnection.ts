@@ -127,20 +127,22 @@ export const useVapiConnection = () => {
   const sendMessage = (message: string) => {
     if (vapiRef.current && isConnected) {
       console.log('Sending text message:', message);
-      // Use the correct method to send text input to Vapi
+      // Use the say method to make the assistant speak the user's message
       try {
-        vapiRef.current.sendTextToAssistant(message);
+        if (typeof (vapiRef.current as any).say === 'function') {
+          (vapiRef.current as any).say(message);
+        } else {
+          // Fallback: send as a message event
+          vapiRef.current.send({
+            type: 'add-message',
+            message: {
+              role: 'user',
+              content: message,
+            },
+          });
+        }
       } catch (error) {
         console.error('Error sending message:', error);
-        // Fallback method if sendTextToAssistant doesn't exist
-        try {
-          (vapiRef.current as any).addMessage({
-            role: 'user',
-            content: message,
-          });
-        } catch (fallbackError) {
-          console.error('Fallback message sending also failed:', fallbackError);
-        }
       }
     }
   };
