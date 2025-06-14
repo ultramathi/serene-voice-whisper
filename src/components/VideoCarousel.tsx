@@ -14,26 +14,206 @@ const VideoCarousel = () => {
     {
       id: 1,
       title: "Ocean Waves",
-      url: "https://vapi.mathivanan.com/video%20(41).mp4",
+      url: "https://images.aiwallpaper.app/video%20(11).mp4",
       description: "Calming ocean waves for deep relaxation"
     },
     {
       id: 2,
       title: "Forest Meditation",
-      url: "https://vapi.mathivanan.com/video%20(41).mp4",
+      url: "https://images.aiwallpaper.app/video%20(12).mp4",
       description: "Peaceful forest sounds for mindfulness"
     },
     {
       id: 3,
       title: "Mountain Serenity",
-      url: "https://vapi.mathivanan.com/video%20(41).mp4",
+      url: "https://images.aiwallpaper.app/video%20(13).mp4",
       description: "Tranquil mountain views for inner peace"
     },
     {
       id: 4,
       title: "Gentle Rain",
-      url: "https://vapi.mathivanan.com/video%20(41).mp4",
+      url: "https://images.aiwallpaper.app/video%20(17).mp4",
       description: "Soothing rainfall for stress relief"
+    },
+    {
+      id: 5,
+      title: "Sunset Glow",
+      url: "https://images.aiwallpaper.app/video%20(19).mp4",
+      description: "Beautiful sunset for evening meditation"
+    },
+    {
+      id: 6,
+      title: "Flowing Water",
+      url: "https://images.aiwallpaper.app/video%20(2).mp4",
+      description: "Gentle water flow for relaxation"
+    },
+    {
+      id: 7,
+      title: "Cloud Dance",
+      url: "https://images.aiwallpaper.app/video%20(20).mp4",
+      description: "Peaceful clouds drifting by"
+    },
+    {
+      id: 8,
+      title: "Garden Zen",
+      url: "https://images.aiwallpaper.app/video%20(21).mp4",
+      description: "Serene garden for mindful moments"
+    },
+    {
+      id: 9,
+      title: "Aurora Beauty",
+      url: "https://images.aiwallpaper.app/video%20(22).mp4",
+      description: "Northern lights for wonder"
+    },
+    {
+      id: 10,
+      title: "Desert Peace",
+      url: "https://images.aiwallpaper.app/video%20(23).mp4",
+      description: "Calm desert landscape"
+    },
+    {
+      id: 11,
+      title: "Misty Morning",
+      url: "https://images.aiwallpaper.app/video%20(24).mp4",
+      description: "Peaceful morning mist"
+    },
+    {
+      id: 12,
+      title: "River Flow",
+      url: "https://images.aiwallpaper.app/video%20(25).mp4",
+      description: "Gentle river current"
+    },
+    {
+      id: 13,
+      title: "Starry Night",
+      url: "https://images.aiwallpaper.app/video%20(26).mp4",
+      description: "Peaceful night sky"
+    },
+    {
+      id: 14,
+      title: "Wind Chimes",
+      url: "https://images.aiwallpaper.app/video%20(27).mp4",
+      description: "Gentle wind melody"
+    },
+    {
+      id: 15,
+      title: "Lotus Pond",
+      url: "https://images.aiwallpaper.app/video%20(28).mp4",
+      description: "Serene lotus flowers"
+    },
+    {
+      id: 16,
+      title: "Bamboo Grove",
+      url: "https://images.aiwallpaper.app/video%20(29).mp4",
+      description: "Peaceful bamboo forest"
+    },
+    {
+      id: 17,
+      title: "Waterfall",
+      url: "https://images.aiwallpaper.app/video%20(3).mp4",
+      description: "Cascading water sounds"
+    },
+    {
+      id: 18,
+      title: "Meadow Breeze",
+      url: "https://images.aiwallpaper.app/video%20(30).mp4",
+      description: "Gentle meadow winds"
+    },
+    {
+      id: 19,
+      title: "Pebble Beach",
+      url: "https://images.aiwallpaper.app/video%20(31).mp4",
+      description: "Soothing beach sounds"
+    },
+    {
+      id: 20,
+      title: "Fireflies",
+      url: "https://images.aiwallpaper.app/video%20(32).mp4",
+      description: "Magical evening lights"
+    },
+    {
+      id: 21,
+      title: "Crystal Cave",
+      url: "https://images.aiwallpaper.app/video%20(33).mp4",
+      description: "Mystical cave ambience"
+    },
+    {
+      id: 22,
+      title: "Lavender Field",
+      url: "https://images.aiwallpaper.app/video%20(34).mp4",
+      description: "Aromatic lavender breeze"
+    },
+    {
+      id: 23,
+      title: "Moonlight",
+      url: "https://images.aiwallpaper.app/video%20(35).mp4",
+      description: "Gentle moonlit scene"
+    },
+    {
+      id: 24,
+      title: "Zen Garden",
+      url: "https://images.aiwallpaper.app/video%20(36).mp4",
+      description: "Traditional zen space"
+    },
+    {
+      id: 25,
+      title: "Spring Rain",
+      url: "https://images.aiwallpaper.app/video%20(37).mp4",
+      description: "Fresh spring rainfall"
+    },
+    {
+      id: 26,
+      title: "Butterfly Garden",
+      url: "https://images.aiwallpaper.app/video%20(38).mp4",
+      description: "Colorful butterflies dancing"
+    },
+    {
+      id: 27,
+      title: "Autumn Leaves",
+      url: "https://images.aiwallpaper.app/video%20(4).mp4",
+      description: "Falling autumn colors"
+    },
+    {
+      id: 28,
+      title: "Winter Frost",
+      url: "https://images.aiwallpaper.app/video%20(40).mp4",
+      description: "Peaceful winter scene"
+    },
+    {
+      id: 29,
+      title: "Cherry Blossoms",
+      url: "https://images.aiwallpaper.app/video%20(41).mp4",
+      description: "Beautiful cherry petals"
+    },
+    {
+      id: 30,
+      title: "Peaceful Lake",
+      url: "https://images.aiwallpaper.app/video%20(42).mp4",
+      description: "Still lake reflection"
+    },
+    {
+      id: 31,
+      title: "Morning Dew",
+      url: "https://images.aiwallpaper.app/video%20(5).mp4",
+      description: "Fresh morning dewdrops"
+    },
+    {
+      id: 32,
+      title: "Golden Hour",
+      url: "https://images.aiwallpaper.app/video%20(6).mp4",
+      description: "Warm golden light"
+    },
+    {
+      id: 33,
+      title: "Coastal Waves",
+      url: "https://images.aiwallpaper.app/video%20(7).mp4",
+      description: "Rhythmic ocean waves"
+    },
+    {
+      id: 34,
+      title: "Forest Stream",
+      url: "https://images.aiwallpaper.app/video%20(8).mp4",
+      description: "Babbling forest brook"
     }
   ];
 
