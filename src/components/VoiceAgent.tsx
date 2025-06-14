@@ -9,12 +9,17 @@ import ConnectionControls from './ConnectionControls';
 import SessionStatus from './SessionStatus';
 import VolumeControl from './VolumeControl';
 import AmbientAudio from './AmbientAudio';
+import SessionManagement from './SessionManagement';
 import { useVapiConnection } from '../hooks/useVapiConnection';
 import { useVolumeControl } from '../hooks/useVolumeControl';
+import { useSessionManager } from '../hooks/useSessionManager';
+import { MoodLevel } from '../types/session';
 
 const VoiceAgent = () => {
   const [apiKey, setApiKey] = useState('');
   const [selectedVoice, setSelectedVoice] = useState('Hana');
+  const [currentSessionId, setCurrentSessionId] = useState<string | null>(null);
+  const [preSessionMood, setPreSessionMood] = useState<MoodLevel | undefined>();
   
   const {
     isConnected,
@@ -29,11 +34,25 @@ const VoiceAgent = () => {
     toggleMute,
   } = useVapiConnection();
 
+  const { startSession, endSession } = useSessionManager();
+
   const masterVolume = useVolumeControl('master', 80);
   const voiceVolume = useVolumeControl('voice', 70);
 
   const handleStartCall = () => {
+    // Start the meditation session tracking
+    if (preSessionMood) {
+      const sessionId = startSession(selectedVoice, preSessionMood);
+      setCurrentSessionId(sessionId);
+    }
+    
+    // Start the actual voice call
     startCall(apiKey, selectedVoice);
+  };
+
+  const handleEndCall = () => {
+    endCall();
+    setCurrentSessionId(null);
   };
 
   return (
@@ -89,7 +108,7 @@ const VoiceAgent = () => {
                   isMuted={isMuted}
                   connectionStatus={connectionStatus}
                   onStartCall={handleStartCall}
-                  onEndCall={endCall}
+                  onEndCall={handleEndCall}
                   onToggleMute={toggleMute}
                 />
               </div>
@@ -103,6 +122,16 @@ const VoiceAgent = () => {
             </div>
           </CardContent>
         </Card>
+      </div>
+
+      {/* Session Management */}
+      <div className="mb-8">
+        <SessionManagement
+          isSessionActive={isConnected}
+          currentSessionId={currentSessionId}
+          onSessionStart={(sessionId) => setCurrentSessionId(sessionId)}
+          onSessionEnd={() => setCurrentSessionId(null)}
+        />
       </div>
     </div>
   );
