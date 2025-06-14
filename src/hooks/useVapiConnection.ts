@@ -1,4 +1,3 @@
-
 import { useState, useRef, useEffect } from 'react';
 import type { VapiInstance } from '../types/vapi';
 import { createAssistantOptions } from '../config/assistantConfig';
@@ -10,6 +9,7 @@ export const useVapiConnection = () => {
   const [isSpeaking, setIsSpeaking] = useState(false);
   const [volumeLevel, setVolumeLevel] = useState(0);
   const [errorMessage, setErrorMessage] = useState('');
+  const [sessionStartTime, setSessionStartTime] = useState<Date | null>(null);
   const vapiRef = useRef<VapiInstance | null>(null);
 
   // Initialize Vapi
@@ -43,6 +43,7 @@ export const useVapiConnection = () => {
       vapiInstance.on('call-start', () => {
         setIsConnected(true);
         setConnectionStatus('connected');
+        setSessionStartTime(new Date());
         console.log('Connected to meditation agent');
       });
 
@@ -50,6 +51,7 @@ export const useVapiConnection = () => {
         setIsConnected(false);
         setConnectionStatus('disconnected');
         setIsSpeaking(false);
+        setSessionStartTime(null);
         console.log('Meditation session ended');
       });
 
@@ -100,6 +102,7 @@ export const useVapiConnection = () => {
     if (vapiRef.current) {
       vapiRef.current.stop();
     }
+    setSessionStartTime(null);
   };
 
   const toggleMute = () => {
@@ -119,6 +122,7 @@ export const useVapiConnection = () => {
     isSpeaking,
     volumeLevel,
     errorMessage,
+    sessionStartTime,
     startCall,
     endCall,
     toggleMute,

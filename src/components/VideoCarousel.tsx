@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Dialog, DialogContent, DialogClose } from '@/components/ui/dialog';
-import { X } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { X, Maximize, Minimize } from 'lucide-react';
 import {
   Carousel,
   CarouselContent,
@@ -19,6 +20,7 @@ interface Video {
 
 const VideoCarousel = () => {
   const [selectedVideo, setSelectedVideo] = useState<Video | null>(null);
+  const [isFullscreen, setIsFullscreen] = useState(false);
 
   const videos = [
     {
@@ -239,14 +241,44 @@ const VideoCarousel = () => {
 
   const handleCloseModal = () => {
     setSelectedVideo(null);
+    setIsFullscreen(false);
+    if (document.fullscreenElement) {
+      document.exitFullscreen();
+    }
   };
+
+  const toggleFullscreen = () => {
+    const videoElement = document.getElementById('modal-video');
+    if (!videoElement) return;
+
+    if (!document.fullscreenElement) {
+      videoElement.requestFullscreen().then(() => {
+        setIsFullscreen(true);
+      }).catch(err => {
+        console.error('Error attempting to enable fullscreen:', err);
+      });
+    } else {
+      document.exitFullscreen().then(() => {
+        setIsFullscreen(false);
+      });
+    }
+  };
+
+  React.useEffect(() => {
+    const handleFullscreenChange = () => {
+      setIsFullscreen(!!document.fullscreenElement);
+    };
+
+    document.addEventListener('fullscreenchange', handleFullscreenChange);
+    return () => document.removeEventListener('fullscreenchange', handleFullscreenChange);
+  }, []);
 
   return (
     <>
       <Card className="mb-6">
         <CardContent className="p-6">
-          <h3 className="text-lg font-semibold mb-4 text-gray-800">Soothing Videos</h3>
-          <p className="text-sm text-gray-600 mb-4">Watch these calming videos while talking with your meditation guide</p>
+          <h3 className="text-lg font-semibold mb-4 text-gray-800 dark:text-gray-200">Soothing Videos</h3>
+          <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">Watch these calming videos while talking with your meditation guide</p>
           
           <Carousel className="w-full max-w-3xl mx-auto">
             <CarouselContent>
@@ -268,8 +300,8 @@ const VideoCarousel = () => {
                             Your browser does not support the video tag.
                           </video>
                           <div>
-                            <h4 className="font-medium text-gray-900">{video.title}</h4>
-                            <p className="text-xs text-gray-500">{video.description}</p>
+                            <h4 className="font-medium text-gray-900 dark:text-gray-100">{video.title}</h4>
+                            <p className="text-xs text-gray-500 dark:text-gray-400">{video.description}</p>
                           </div>
                         </div>
                       </CardContent>
@@ -284,13 +316,23 @@ const VideoCarousel = () => {
         </CardContent>
       </Card>
 
-      {/* Lightbox Modal */}
+      {/* Enhanced Lightbox Modal */}
       <Dialog open={!!selectedVideo} onOpenChange={handleCloseModal}>
         <DialogContent className="max-w-4xl w-full p-0 bg-black">
-          <div className="relative">
-            <DialogClose className="absolute top-4 right-4 z-10 bg-black/50 hover:bg-black/70 rounded-full p-2 transition-colors">
-              <X className="h-6 w-6 text-white" />
-            </DialogClose>
+          <div className="relative" id="modal-video">
+            <div className="absolute top-4 right-4 z-10 flex space-x-2">
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={toggleFullscreen}
+                className="bg-black/50 hover:bg-black/70 text-white rounded-full p-2"
+              >
+                {isFullscreen ? <Minimize className="h-4 w-4" /> : <Maximize className="h-4 w-4" />}
+              </Button>
+              <DialogClose className="bg-black/50 hover:bg-black/70 rounded-full p-2 transition-colors">
+                <X className="h-6 w-6 text-white" />
+              </DialogClose>
+            </div>
             {selectedVideo && (
               <div className="relative">
                 <video
