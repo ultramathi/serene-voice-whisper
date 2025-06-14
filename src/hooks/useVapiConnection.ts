@@ -11,7 +11,6 @@ export const useVapiConnection = () => {
   const [volumeLevel, setVolumeLevel] = useState(0);
   const [errorMessage, setErrorMessage] = useState('');
   const vapiRef = useRef<VapiInstance | null>(null);
-  const [onMessageReceived, setOnMessageReceived] = useState<((message: string) => void) | null>(null);
 
   // Initialize Vapi
   useEffect(() => {
@@ -68,17 +67,6 @@ export const useVapiConnection = () => {
         setVolumeLevel(level);
       });
 
-      // Listen for messages/transcripts
-      vapiInstance.on('message', (message: any) => {
-        console.log('Received message:', message);
-        if (message.type === 'transcript' && message.role === 'assistant' && message.transcript) {
-          console.log('Agent message:', message.transcript);
-          if (onMessageReceived) {
-            onMessageReceived(message.transcript);
-          }
-        }
-      });
-
       vapiInstance.on('error', (error: any) => {
         console.error('Vapi error:', error);
         setConnectionStatus('error');
@@ -124,29 +112,6 @@ export const useVapiConnection = () => {
     }
   };
 
-  const sendMessage = (message: string) => {
-    if (vapiRef.current && isConnected) {
-      console.log('Sending text message:', message);
-      // Use the say method to make the assistant speak the user's message
-      try {
-        if (typeof (vapiRef.current as any).say === 'function') {
-          (vapiRef.current as any).say(message);
-        } else {
-          // Fallback: send as a message event
-          vapiRef.current.send({
-            type: 'add-message',
-            message: {
-              role: 'user',
-              content: message,
-            },
-          });
-        }
-      } catch (error) {
-        console.error('Error sending message:', error);
-      }
-    }
-  };
-
   return {
     isConnected,
     isMuted,
@@ -157,7 +122,5 @@ export const useVapiConnection = () => {
     startCall,
     endCall,
     toggleMute,
-    sendMessage,
-    setOnMessageReceived,
   };
 };
