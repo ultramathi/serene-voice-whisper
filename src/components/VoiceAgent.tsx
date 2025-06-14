@@ -8,6 +8,7 @@ import ApiKeyInput from './ApiKeyInput';
 import ConnectionControls from './ConnectionControls';
 import SessionStatus from './SessionStatus';
 import VolumeControl from './VolumeControl';
+import AmbientAudio from './AmbientAudio';
 import { useVapiConnection } from '../hooks/useVapiConnection';
 import { useVolumeControl } from '../hooks/useVolumeControl';
 
@@ -39,6 +40,8 @@ const VoiceAgent = () => {
     <div>
       <VideoCarousel />
       
+      <AmbientAudio />
+
       <VoiceSelector
         selectedVoice={selectedVoice}
         onVoiceChange={setSelectedVoice}
