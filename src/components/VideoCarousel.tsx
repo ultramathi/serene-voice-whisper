@@ -1,6 +1,7 @@
-
-import React from 'react';
+import React, { useState } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
+import { Dialog, DialogContent, DialogClose } from '@/components/ui/dialog';
+import { X } from 'lucide-react';
 import {
   Carousel,
   CarouselContent,
@@ -9,7 +10,16 @@ import {
   CarouselPrevious,
 } from '@/components/ui/carousel';
 
+interface Video {
+  id: number;
+  title: string;
+  url: string;
+  description: string;
+}
+
 const VideoCarousel = () => {
+  const [selectedVideo, setSelectedVideo] = useState<Video | null>(null);
+
   const videos = [
     {
       id: 1,
@@ -169,94 +179,141 @@ const VideoCarousel = () => {
     },
     {
       id: 27,
+      title: "Enchanted Forest",
+      url: "https://images.aiwallpaper.app/video%20(39).mp4",
+      description: "Magical forest atmosphere"
+    },
+    {
+      id: 28,
       title: "Autumn Leaves",
       url: "https://images.aiwallpaper.app/video%20(4).mp4",
       description: "Falling autumn colors"
     },
     {
-      id: 28,
+      id: 29,
       title: "Winter Frost",
       url: "https://images.aiwallpaper.app/video%20(40).mp4",
       description: "Peaceful winter scene"
     },
     {
-      id: 29,
+      id: 30,
       title: "Cherry Blossoms",
       url: "https://images.aiwallpaper.app/video%20(41).mp4",
       description: "Beautiful cherry petals"
     },
     {
-      id: 30,
+      id: 31,
       title: "Peaceful Lake",
       url: "https://images.aiwallpaper.app/video%20(42).mp4",
       description: "Still lake reflection"
     },
     {
-      id: 31,
+      id: 32,
       title: "Morning Dew",
       url: "https://images.aiwallpaper.app/video%20(5).mp4",
       description: "Fresh morning dewdrops"
     },
     {
-      id: 32,
+      id: 33,
       title: "Golden Hour",
       url: "https://images.aiwallpaper.app/video%20(6).mp4",
       description: "Warm golden light"
     },
     {
-      id: 33,
+      id: 34,
       title: "Coastal Waves",
       url: "https://images.aiwallpaper.app/video%20(7).mp4",
       description: "Rhythmic ocean waves"
     },
     {
-      id: 34,
+      id: 35,
       title: "Forest Stream",
       url: "https://images.aiwallpaper.app/video%20(8).mp4",
       description: "Babbling forest brook"
     }
   ];
 
+  const handleVideoClick = (video: Video) => {
+    setSelectedVideo(video);
+  };
+
+  const handleCloseModal = () => {
+    setSelectedVideo(null);
+  };
+
   return (
-    <Card className="mb-6">
-      <CardContent className="p-6">
-        <h3 className="text-lg font-semibold mb-4 text-gray-800">Soothing Videos</h3>
-        <p className="text-sm text-gray-600 mb-4">Watch these calming videos while talking with your meditation guide</p>
-        
-        <Carousel className="w-full max-w-3xl mx-auto">
-          <CarouselContent>
-            {videos.map((video) => (
-              <CarouselItem key={video.id} className="md:basis-1/2 lg:basis-1/3">
-                <div className="p-1">
-                  <Card>
-                    <CardContent className="p-4">
-                      <div className="space-y-3">
-                        <video 
-                          autoPlay 
-                          muted 
-                          loop 
-                          playsInline
-                          className="w-full h-32 object-cover rounded-lg"
-                        >
-                          <source src={video.url} type="video/mp4" />
-                          Your browser does not support the video tag.
-                        </video>
-                        <div>
-                          <h4 className="font-medium text-gray-900">{video.title}</h4>
-                          <p className="text-xs text-gray-500">{video.description}</p>
+    <>
+      <Card className="mb-6">
+        <CardContent className="p-6">
+          <h3 className="text-lg font-semibold mb-4 text-gray-800">Soothing Videos</h3>
+          <p className="text-sm text-gray-600 mb-4">Watch these calming videos while talking with your meditation guide</p>
+          
+          <Carousel className="w-full max-w-3xl mx-auto">
+            <CarouselContent>
+              {videos.map((video) => (
+                <CarouselItem key={video.id} className="md:basis-1/2 lg:basis-1/3">
+                  <div className="p-1">
+                    <Card>
+                      <CardContent className="p-4">
+                        <div className="space-y-3">
+                          <video 
+                            autoPlay 
+                            muted 
+                            loop 
+                            playsInline
+                            className="w-full h-32 object-cover rounded-lg cursor-pointer hover:opacity-80 transition-opacity"
+                            onClick={() => handleVideoClick(video)}
+                          >
+                            <source src={video.url} type="video/mp4" />
+                            Your browser does not support the video tag.
+                          </video>
+                          <div>
+                            <h4 className="font-medium text-gray-900">{video.title}</h4>
+                            <p className="text-xs text-gray-500">{video.description}</p>
+                          </div>
                         </div>
-                      </div>
-                    </CardContent>
-                  </Card>
+                      </CardContent>
+                    </Card>
+                  </div>
+                </CarouselItem>
+              ))}
+            </CarouselContent>
+            <CarouselPrevious />
+            <CarouselNext />
+          </Carousel>
+        </CardContent>
+      </Card>
+
+      {/* Lightbox Modal */}
+      <Dialog open={!!selectedVideo} onOpenChange={handleCloseModal}>
+        <DialogContent className="max-w-4xl w-full p-0 bg-black">
+          <div className="relative">
+            <DialogClose className="absolute top-4 right-4 z-10 bg-black/50 hover:bg-black/70 rounded-full p-2 transition-colors">
+              <X className="h-6 w-6 text-white" />
+            </DialogClose>
+            {selectedVideo && (
+              <div className="relative">
+                <video
+                  autoPlay
+                  muted
+                  loop
+                  playsInline
+                  controls
+                  className="w-full h-auto max-h-[80vh] object-contain"
+                >
+                  <source src={selectedVideo.url} type="video/mp4" />
+                  Your browser does not support the video tag.
+                </video>
+                <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-6">
+                  <h3 className="text-white text-xl font-semibold mb-2">{selectedVideo.title}</h3>
+                  <p className="text-white/80 text-sm">{selectedVideo.description}</p>
                 </div>
-              </CarouselItem>
-            ))}
-          </CarouselContent>
-          <CarouselPrevious />
-          <CarouselNext />
-        </Carousel>
-      </CardContent>
-    </Card>
+              </div>
+            )}
+          </div>
+        </DialogContent>
+      </Dialog>
+    </>
   );
 };
 
