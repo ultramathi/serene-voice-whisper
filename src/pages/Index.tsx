@@ -4,7 +4,6 @@ import VoiceAgent from '../components/VoiceAgent';
 import MeditationHeader from '../components/MeditationHeader';
 import FeatureCards from '../components/FeatureCards';
 import ThemeToggle from '../components/ThemeToggle';
-import AmbientAudio from '../components/AmbientAudio';
 import BreathingTimer from '../components/BreathingTimer';
 
 const Index = () => {
@@ -17,7 +16,6 @@ const Index = () => {
         <MeditationHeader />
         <div className="max-w-4xl mx-auto">
           <VoiceAgent />
-          <AmbientAudio />
           <BreathingTimer />
           <FeatureCards />
         </div>
