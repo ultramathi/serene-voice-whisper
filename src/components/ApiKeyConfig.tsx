@@ -28,6 +28,8 @@ const ApiKeyConfig: React.FC<ApiKeyConfigProps> = ({
   connectionStatus,
 }) => {
   const isConnecting = connectionStatus === 'connecting';
+  const hasCustomKeyValue = customApiKey.trim().length > 0;
+  const isCustomKeyValid = hasCustomKeyValue && isValidKey;
 
   return (
     <Card className="w-full max-w-md mx-auto">
@@ -112,7 +114,7 @@ const ApiKeyConfig: React.FC<ApiKeyConfigProps> = ({
                   Get API Key <ExternalLink className="w-3 h-3 ml-1" />
                 </a>
                 
-                {isValidKey && (
+                {isCustomKeyValid && (
                   <span className="text-green-600 dark:text-green-400">✓ Valid</span>
                 )}
               </div>
