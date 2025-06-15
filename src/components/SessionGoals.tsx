@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Progress } from '@/components/ui/progress';
+import { Checkbox } from '@/components/ui/checkbox';
 import { Plus, Target, CheckCircle, Edit, Check, X } from 'lucide-react';
 import { SessionGoal } from '../types/session';
 
@@ -61,6 +62,12 @@ const SessionGoals: React.FC<SessionGoalsProps> = ({
   const handleCancelEdit = () => {
     setEditingGoal(null);
     setEditGoal({ title: '', description: '', targetSessions: 7 });
+  };
+
+  const handleCheckboxChange = (goalId: string, checked: boolean) => {
+    if (checked) {
+      onCompleteGoal(goalId);
+    }
   };
 
   const getProgressPercentage = (goal: SessionGoal) => {
@@ -175,42 +182,39 @@ const SessionGoals: React.FC<SessionGoalsProps> = ({
                 ) : (
                   <>
                     <div className="flex items-start justify-between mb-2">
-                      <div className="flex-1">
-                        <h4 className="font-medium flex items-center gap-2">
-                          {goal.completedAt && <CheckCircle className="w-4 h-4 text-green-500" />}
-                          {goal.title}
-                        </h4>
-                        {goal.description && (
-                          <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
-                            {goal.description}
-                          </p>
-                        )}
-                      </div>
-                      {!goal.completedAt && (
-                        <div className="flex gap-2">
-                          <Button
-                            onClick={() => handleEditGoal(goal)}
-                            variant="ghost"
-                            size="sm"
-                          >
-                            <Edit className="w-4 h-4" />
-                          </Button>
-                          {goal.completedSessions >= goal.targetSessions && (
-                            <Button
-                              onClick={() => onCompleteGoal(goal.id)}
-                              variant="default"
-                              size="sm"
-                              className="bg-green-600 hover:bg-green-700"
-                            >
-                              <CheckCircle className="w-4 h-4 mr-1" />
-                              Complete
-                            </Button>
+                      <div className="flex items-start gap-3 flex-1">
+                        <Checkbox
+                          checked={!!goal.completedAt}
+                          onCheckedChange={(checked) => handleCheckboxChange(goal.id, checked as boolean)}
+                          disabled={!!goal.completedAt}
+                          className="mt-0.5"
+                        />
+                        <div className="flex-1">
+                          <h4 className="font-medium flex items-center gap-2">
+                            {goal.completedAt && <CheckCircle className="w-4 h-4 text-green-500" />}
+                            <span className={goal.completedAt ? 'line-through text-gray-500 dark:text-gray-400' : ''}>
+                              {goal.title}
+                            </span>
+                          </h4>
+                          {goal.description && (
+                            <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
+                              {goal.description}
+                            </p>
                           )}
                         </div>
+                      </div>
+                      {!goal.completedAt && (
+                        <Button
+                          onClick={() => handleEditGoal(goal)}
+                          variant="ghost"
+                          size="sm"
+                        >
+                          <Edit className="w-4 h-4" />
+                        </Button>
                       )}
                     </div>
                     
-                    <div className="space-y-2">
+                    <div className="space-y-2 ml-7">
                       <div className="flex justify-between text-sm">
                         <span>Progress</span>
                         <span>
