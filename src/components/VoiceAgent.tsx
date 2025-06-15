@@ -10,7 +10,6 @@ import SessionStatus from './SessionStatus';
 import VolumeControl from './VolumeControl';
 import SessionManagement from './SessionManagement';
 import UnifiedSession from './UnifiedSession';
-import PreSessionGame from './PreSessionGame';
 import { useVapiConnection } from '../hooks/useVapiConnection';
 import { useVolumeControl } from '../hooks/useVolumeControl';
 import { useSessionManager } from '../hooks/useSessionManager';
@@ -22,7 +21,6 @@ const VoiceAgent = () => {
   const [currentSessionId, setCurrentSessionId] = useState<string | null>(null);
   const [preSessionMood, setPreSessionMood] = useState<MoodLevel | undefined>();
   const [useUnifiedSession, setUseUnifiedSession] = useState(false);
-  const [showGame, setShowGame] = useState(true);
   
   const {
     apiKey,
@@ -70,10 +68,6 @@ const VoiceAgent = () => {
   const handleEndCall = () => {
     endCall();
     setCurrentSessionId(null);
-  };
-
-  const handleGameComplete = () => {
-    setShowGame(false);
   };
 
   const handleUnifiedSessionStart = () => {
@@ -134,11 +128,6 @@ const VoiceAgent = () => {
         />
       ) : (
         <>
-          {/* Pre-Session Game - Show when not connected and game hasn't been completed */}
-          {!isConnected && showGame && hasValidKey && (
-            <PreSessionGame onComplete={handleGameComplete} />
-          )}
-
           {isConnected && (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
               <VolumeControl
@@ -186,17 +175,15 @@ const VoiceAgent = () => {
                 </CardContent>
               </Card>
             ) : (
-              !showGame && (
-                <ApiKeyConfig
-                  useCustomKey={useCustomKey}
-                  customApiKey={customApiKey}
-                  onToggleCustomKey={toggleCustomKey}
-                  onCustomKeyChange={updateCustomKey}
-                  onStartSession={handleStartCall}
-                  isValidKey={hasValidKey}
-                  errorMessage={errorMessage}
-                />
-              )
+              <ApiKeyConfig
+                useCustomKey={useCustomKey}
+                customApiKey={customApiKey}
+                onToggleCustomKey={toggleCustomKey}
+                onCustomKeyChange={updateCustomKey}
+                onStartSession={handleStartCall}
+                isValidKey={hasValidKey}
+                errorMessage={errorMessage}
+              />
             )}
           </div>
         </>
