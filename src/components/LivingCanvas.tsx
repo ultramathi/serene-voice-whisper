@@ -4,7 +4,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Slider } from '@/components/ui/slider';
 import { Dialog, DialogContent, DialogClose } from '@/components/ui/dialog';
-import { Play, Pause, Volume2, VolumeOff, Grid3X3, X, Maximize, Minimize } from 'lucide-react';
+import { Play, Pause, Volume2, VolumeOff, Grid3X3, X, Maximize, Minimize, Shuffle } from 'lucide-react';
 
 interface Video {
   id: number;
@@ -24,16 +24,41 @@ interface AmbientTrack {
 }
 
 const videos: Video[] = [
-  { id: 1, title: "Ocean Waves", url: "https://images.aiwallpaper.app/video%20(11).mp4", description: "Calming ocean waves", mood: 'calm' },
-  { id: 2, title: "Forest Meditation", url: "https://images.aiwallpaper.app/video%20(12).mp4", description: "Peaceful forest sounds", mood: 'nature' },
-  { id: 3, title: "Mountain Serenity", url: "https://images.aiwallpaper.app/video%20(13).mp4", description: "Tranquil mountain views", mood: 'calm' },
-  { id: 4, title: "Gentle Rain", url: "https://images.aiwallpaper.app/video%20(17).mp4", description: "Soothing rainfall", mood: 'calm' },
-  { id: 5, title: "Sunset Glow", url: "https://images.aiwallpaper.app/video%20(19).mp4", description: "Beautiful sunset", mood: 'energetic' },
-  { id: 6, title: "Flowing Water", url: "https://images.aiwallpaper.app/video%20(2).mp4", description: "Gentle water flow", mood: 'nature' },
-  { id: 7, title: "Cloud Dance", url: "https://images.aiwallpaper.app/video%20(20).mp4", description: "Peaceful clouds", mood: 'mystical' },
-  { id: 8, title: "Garden Zen", url: "https://images.aiwallpaper.app/video%20(21).mp4", description: "Serene garden", mood: 'nature' },
-  { id: 9, title: "Aurora Beauty", url: "https://images.aiwallpaper.app/video%20(22).mp4", description: "Northern lights", mood: 'mystical' },
-  { id: 10, title: "Desert Peace", url: "https://images.aiwallpaper.app/video%20(23).mp4", description: "Calm desert", mood: 'calm' }
+  { id: 11, title: "Ocean Waves", url: "https://images.aiwallpaper.app/video%20(11).mp4", description: "Calming ocean waves", mood: 'calm' },
+  { id: 12, title: "Forest Meditation", url: "https://images.aiwallpaper.app/video%20(12).mp4", description: "Peaceful forest sounds", mood: 'nature' },
+  { id: 13, title: "Mountain Serenity", url: "https://images.aiwallpaper.app/video%20(13).mp4", description: "Tranquil mountain views", mood: 'calm' },
+  { id: 17, title: "Gentle Rain", url: "https://images.aiwallpaper.app/video%20(17).mp4", description: "Soothing rainfall", mood: 'calm' },
+  { id: 19, title: "Sunset Glow", url: "https://images.aiwallpaper.app/video%20(19).mp4", description: "Beautiful sunset", mood: 'energetic' },
+  { id: 2, title: "Flowing Water", url: "https://images.aiwallpaper.app/video%20(2).mp4", description: "Gentle water flow", mood: 'nature' },
+  { id: 20, title: "Cloud Dance", url: "https://images.aiwallpaper.app/video%20(20).mp4", description: "Peaceful clouds", mood: 'mystical' },
+  { id: 21, title: "Garden Zen", url: "https://images.aiwallpaper.app/video%20(21).mp4", description: "Serene garden", mood: 'nature' },
+  { id: 22, title: "Aurora Beauty", url: "https://images.aiwallpaper.app/video%20(22).mp4", description: "Northern lights", mood: 'mystical' },
+  { id: 23, title: "Desert Peace", url: "https://images.aiwallpaper.app/video%20(23).mp4", description: "Calm desert", mood: 'calm' },
+  { id: 24, title: "Mystic Waters", url: "https://images.aiwallpaper.app/video%20(24).mp4", description: "Mystical water scenes", mood: 'mystical' },
+  { id: 25, title: "Forest Dreams", url: "https://images.aiwallpaper.app/video%20(25).mp4", description: "Dreamy forest", mood: 'nature' },
+  { id: 26, title: "Ocean Depths", url: "https://images.aiwallpaper.app/video%20(26).mp4", description: "Deep ocean calm", mood: 'calm' },
+  { id: 27, title: "Golden Hour", url: "https://images.aiwallpaper.app/video%20(27).mp4", description: "Golden light energy", mood: 'energetic' },
+  { id: 28, title: "Starlight", url: "https://images.aiwallpaper.app/video%20(28).mp4", description: "Mystical starlight", mood: 'mystical' },
+  { id: 29, title: "River Flow", url: "https://images.aiwallpaper.app/video%20(29).mp4", description: "Peaceful river", mood: 'nature' },
+  { id: 3, title: "Peaceful Lake", url: "https://images.aiwallpaper.app/video%20(3).mp4", description: "Still lake waters", mood: 'calm' },
+  { id: 30, title: "Wind Dance", url: "https://images.aiwallpaper.app/video%20(30).mp4", description: "Dancing in the wind", mood: 'energetic' },
+  { id: 31, title: "Crystal Cave", url: "https://images.aiwallpaper.app/video%20(31).mp4", description: "Mystical crystal cave", mood: 'mystical' },
+  { id: 32, title: "Bamboo Grove", url: "https://images.aiwallpaper.app/video%20(32).mp4", description: "Zen bamboo forest", mood: 'nature' },
+  { id: 33, title: "Peaceful Shore", url: "https://images.aiwallpaper.app/video%20(33).mp4", description: "Calm shoreline", mood: 'calm' },
+  { id: 34, title: "Fire Dance", url: "https://images.aiwallpaper.app/video%20(34).mp4", description: "Energetic flames", mood: 'energetic' },
+  { id: 35, title: "Moonlight", url: "https://images.aiwallpaper.app/video%20(35).mp4", description: "Mystical moonlight", mood: 'mystical' },
+  { id: 36, title: "Garden Path", url: "https://images.aiwallpaper.app/video%20(36).mp4", description: "Nature's pathway", mood: 'nature' },
+  { id: 37, title: "Still Waters", url: "https://images.aiwallpaper.app/video%20(37).mp4", description: "Perfectly calm", mood: 'calm' },
+  { id: 38, title: "Solar Flare", url: "https://images.aiwallpaper.app/video%20(38).mp4", description: "Energetic solar burst", mood: 'energetic' },
+  { id: 39, title: "Spirit Lights", url: "https://images.aiwallpaper.app/video%20(39).mp4", description: "Mystical spirit dance", mood: 'mystical' },
+  { id: 4, title: "Woodland Peace", url: "https://images.aiwallpaper.app/video%20(4).mp4", description: "Peaceful woodland", mood: 'nature' },
+  { id: 40, title: "Misty Morning", url: "https://images.aiwallpaper.app/video%20(40).mp4", description: "Calm morning mist", mood: 'calm' },
+  { id: 41, title: "Electric Storm", url: "https://images.aiwallpaper.app/video%20(41).mp4", description: "Energetic lightning", mood: 'energetic' },
+  { id: 42, title: "Cosmic Dance", url: "https://images.aiwallpaper.app/video%20(42).mp4", description: "Mystical cosmos", mood: 'mystical' },
+  { id: 5, title: "Fresh Spring", url: "https://images.aiwallpaper.app/video%20(5).mp4", description: "Spring nature", mood: 'nature' },
+  { id: 6, title: "Tranquil Pool", url: "https://images.aiwallpaper.app/video%20(6).mp4", description: "Calm water pool", mood: 'calm' },
+  { id: 7, title: "Sunrise Energy", url: "https://images.aiwallpaper.app/video%20(7).mp4", description: "Energetic sunrise", mood: 'energetic' },
+  { id: 8, title: "Magic Forest", url: "https://images.aiwallpaper.app/video%20(8).mp4", description: "Mystical forest", mood: 'mystical' }
 ];
 
 const ambientTracks: AmbientTrack[] = [
@@ -42,7 +67,9 @@ const ambientTracks: AmbientTrack[] = [
   { id: 'waves', name: 'Ocean Waves', url: 'https://images.aiwallpaper.app/music/waves.mp3', icon: '🌊', mood: 'calm', color: 'from-cyan-400 to-blue-500' },
   { id: 'waterflow', name: 'Water Flow', url: 'https://images.aiwallpaper.app/music/waterflow.mp3', icon: '💧', mood: 'nature', color: 'from-teal-400 to-green-500' },
   { id: 'lofi_3', name: 'Lo-fi Chill', url: 'https://images.aiwallpaper.app/music/lofi_3.mp3', icon: '🎵', mood: 'mystical', color: 'from-purple-400 to-pink-500' },
-  { id: 'lofi_4', name: 'Lo-fi Smooth', url: 'https://images.aiwallpaper.app/music/lofi_4.mp3', icon: '🎶', mood: 'calm', color: 'from-violet-400 to-purple-500' }
+  { id: 'lofi_4', name: 'Lo-fi Smooth', url: 'https://images.aiwallpaper.app/music/lofi_4.mp3', icon: '🎶', mood: 'calm', color: 'from-violet-400 to-purple-500' },
+  { id: 'lofi_7', name: 'Lo-fi Dreams', url: 'https://images.aiwallpaper.app/music/lofi_7.mp3', icon: '🎼', mood: 'mystical', color: 'from-indigo-400 to-purple-500' },
+  { id: 'lofi_8', name: 'Lo-fi Zen', url: 'https://images.aiwallpaper.app/music/lofi_8.mp3', icon: '🎹', mood: 'nature', color: 'from-green-400 to-teal-500' }
 ];
 
 const LivingCanvas = () => {
@@ -55,6 +82,7 @@ const LivingCanvas = () => {
   const [showVideoSelector, setShowVideoSelector] = useState(false);
   const [showFullscreen, setShowFullscreen] = useState(false);
   const [zenMode, setZenMode] = useState(false);
+  const [shuffledVideos, setShuffledVideos] = useState<Video[]>(videos);
   
   const audioRefs = useRef<Record<string, HTMLAudioElement>>({});
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -62,6 +90,20 @@ const LivingCanvas = () => {
   useEffect(() => {
     localStorage.setItem('canvasVolumes', JSON.stringify(volumes));
   }, [volumes]);
+
+  const shuffleArray = <T,>(array: T[]): T[] => {
+    const shuffled = [...array];
+    for (let i = shuffled.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+    }
+    return shuffled;
+  };
+
+  const getRandomVideo = (): Video => {
+    const availableVideos = videos.filter(video => video.id !== currentVideo.id);
+    return availableVideos[Math.floor(Math.random() * availableVideos.length)];
+  };
 
   const toggleTrack = async (trackId: string) => {
     const audio = audioRefs.current[trackId];
@@ -74,7 +116,6 @@ const LivingCanvas = () => {
       if (playingTracks.has(trackId)) {
         console.log(`Pausing track: ${trackId}`);
         audio.pause();
-        audio.currentTime = 0; // Reset to beginning
         setPlayingTracks(prev => {
           const newSet = new Set(prev);
           newSet.delete(trackId);
@@ -87,7 +128,6 @@ const LivingCanvas = () => {
       }
     } catch (error) {
       console.error(`Error toggling track ${trackId}:`, error);
-      // Remove from playing tracks if there was an error
       setPlayingTracks(prev => {
         const newSet = new Set(prev);
         newSet.delete(trackId);
@@ -114,6 +154,15 @@ const LivingCanvas = () => {
       const randomTrack = matchingTracks[Math.floor(Math.random() * matchingTracks.length)];
       setTimeout(() => toggleTrack(randomTrack.id), 500);
     }
+  };
+
+  const selectRandomVideo = () => {
+    const randomVideo = getRandomVideo();
+    changeVideo(randomVideo);
+  };
+
+  const shuffleVideoGrid = () => {
+    setShuffledVideos(shuffleArray(videos));
   };
 
   const toggleFullscreen = () => {
@@ -168,6 +217,15 @@ const LivingCanvas = () => {
               <Button
                 variant="ghost"
                 size="sm"
+                onClick={selectRandomVideo}
+                className="bg-white/10 backdrop-blur-md hover:bg-white/20 text-white border border-white/20 rounded-full h-10 w-10 p-0"
+                title="Random Video"
+              >
+                <Shuffle className="h-4 w-4" />
+              </Button>
+              <Button
+                variant="ghost"
+                size="sm"
                 onClick={() => setShowVideoSelector(true)}
                 className="bg-white/10 backdrop-blur-md hover:bg-white/20 text-white border border-white/20 rounded-full h-10 w-10 p-0"
               >
@@ -186,7 +244,7 @@ const LivingCanvas = () => {
 
           {/* Floating Audio Bubbles */}
           <div className="absolute bottom-6 left-6 right-6 z-20">
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               {ambientTracks.map((track, index) => (
                 <div
                   key={track.id}
@@ -309,9 +367,21 @@ const LivingCanvas = () => {
 
       {/* Video Selector Modal */}
       <Dialog open={showVideoSelector} onOpenChange={setShowVideoSelector}>
-        <DialogContent className="max-w-4xl bg-black/90 backdrop-blur-lg border-white/20">
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-4 p-4 max-h-[70vh] overflow-y-auto">
-            {videos.map((video) => (
+        <DialogContent className="max-w-6xl bg-black/90 backdrop-blur-lg border-white/20">
+          <div className="flex justify-between items-center mb-4 p-4">
+            <h2 className="text-white text-xl font-semibold">Choose Your Scene</h2>
+            <Button
+              onClick={shuffleVideoGrid}
+              variant="ghost"
+              size="sm"
+              className="bg-white/10 hover:bg-white/20 text-white border border-white/20 rounded-full"
+            >
+              <Shuffle className="h-4 w-4 mr-2" />
+              Shuffle
+            </Button>
+          </div>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 p-4 max-h-[70vh] overflow-y-auto">
+            {shuffledVideos.map((video) => (
               <div
                 key={video.id}
                 className="relative group cursor-pointer"
@@ -330,6 +400,14 @@ const LivingCanvas = () => {
                 <div className="absolute bottom-2 left-2 right-2">
                   <h4 className="text-white font-medium text-sm">{video.title}</h4>
                   <p className="text-white/80 text-xs">{video.description}</p>
+                  <span className={`inline-block px-2 py-1 rounded-full text-xs mt-1 ${
+                    video.mood === 'calm' ? 'bg-blue-500/30 text-blue-200' :
+                    video.mood === 'energetic' ? 'bg-orange-500/30 text-orange-200' :
+                    video.mood === 'mystical' ? 'bg-purple-500/30 text-purple-200' :
+                    'bg-green-500/30 text-green-200'
+                  }`}>
+                    {video.mood}
+                  </span>
                 </div>
                 {currentVideo.id === video.id && (
                   <div className="absolute inset-0 border-2 border-white rounded-lg" />
