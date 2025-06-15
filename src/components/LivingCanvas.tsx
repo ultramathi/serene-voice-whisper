@@ -24,6 +24,7 @@ interface AmbientTrack {
 }
 
 const videos: Video[] = [
+  { id: 23, title: "Desert Peace", url: "https://images.aiwallpaper.app/video%20(23).mp4", description: "Calm desert", mood: 'calm' },
   { id: 12, title: "Forest Meditation", url: "https://images.aiwallpaper.app/video%20(12).mp4", description: "Peaceful forest sounds", mood: 'nature' },
   { id: 13, title: "Mountain Serenity", url: "https://images.aiwallpaper.app/video%20(13).mp4", description: "Tranquil mountain views", mood: 'calm' },
   { id: 17, title: "Gentle Rain", url: "https://images.aiwallpaper.app/video%20(17).mp4", description: "Soothing rainfall", mood: 'calm' },
@@ -32,7 +33,6 @@ const videos: Video[] = [
   { id: 20, title: "Cloud Dance", url: "https://images.aiwallpaper.app/video%20(20).mp4", description: "Peaceful clouds", mood: 'mystical' },
   { id: 21, title: "Garden Zen", url: "https://images.aiwallpaper.app/video%20(21).mp4", description: "Serene garden", mood: 'nature' },
   { id: 22, title: "Aurora Beauty", url: "https://images.aiwallpaper.app/video%20(22).mp4", description: "Northern lights", mood: 'mystical' },
-  { id: 23, title: "Desert Peace", url: "https://images.aiwallpaper.app/video%20(23).mp4", description: "Calm desert", mood: 'calm' },
   { id: 24, title: "Mystic Waters", url: "https://images.aiwallpaper.app/video%20(24).mp4", description: "Mystical water scenes", mood: 'mystical' },
   { id: 25, title: "Forest Dreams", url: "https://images.aiwallpaper.app/video%20(25).mp4", description: "Dreamy forest", mood: 'nature' },
   { id: 26, title: "Ocean Depths", url: "https://images.aiwallpaper.app/video%20(26).mp4", description: "Deep ocean calm", mood: 'calm' },
