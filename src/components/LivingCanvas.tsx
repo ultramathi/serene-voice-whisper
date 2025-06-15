@@ -1,3 +1,4 @@
+
 import React, { useState, useRef, useEffect } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -23,7 +24,6 @@ interface AmbientTrack {
 }
 
 const videos: Video[] = [
-  { id: 11, title: "Ocean Waves", url: "https://images.aiwallpaper.app/video%20(11).mp4", description: "Calming ocean waves", mood: 'calm' },
   { id: 12, title: "Forest Meditation", url: "https://images.aiwallpaper.app/video%20(12).mp4", description: "Peaceful forest sounds", mood: 'nature' },
   { id: 13, title: "Mountain Serenity", url: "https://images.aiwallpaper.app/video%20(13).mp4", description: "Tranquil mountain views", mood: 'calm' },
   { id: 17, title: "Gentle Rain", url: "https://images.aiwallpaper.app/video%20(17).mp4", description: "Soothing rainfall", mood: 'calm' },
