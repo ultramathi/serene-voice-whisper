@@ -21,14 +21,24 @@ const ConnectionControls: React.FC<ConnectionControlsProps> = ({
   onToggleMute,
 }) => {
   if (!isConnected) {
+    const isConnecting = connectionStatus === 'connecting';
     return (
       <Button
         onClick={onStartCall}
-        disabled={connectionStatus === 'connecting'}
+        disabled={isConnecting}
         className="bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white px-8 py-4 rounded-full shadow-lg transform transition-all duration-200 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
       >
-        <Phone className="w-5 h-5 mr-2" />
-        {connectionStatus === 'connecting' ? 'Connecting...' : 'Begin Meditation Session'}
+        {isConnecting ? (
+          <>
+            <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
+            Connecting...
+          </>
+        ) : (
+          <>
+            <Phone className="w-5 h-5 mr-2" />
+            Begin Meditation Session
+          </>
+        )}
       </Button>
     );
   }

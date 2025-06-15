@@ -14,6 +14,7 @@ interface ApiKeyConfigProps {
   onStartSession: () => void;
   isValidKey: boolean;
   errorMessage?: string;
+  connectionStatus: string;
 }
 
 const ApiKeyConfig: React.FC<ApiKeyConfigProps> = ({
@@ -24,7 +25,10 @@ const ApiKeyConfig: React.FC<ApiKeyConfigProps> = ({
   onStartSession,
   isValidKey,
   errorMessage,
+  connectionStatus,
 }) => {
+  const isConnecting = connectionStatus === 'connecting';
+
   return (
     <Card className="w-full max-w-md mx-auto">
       <CardContent className="p-6 space-y-6">
@@ -42,11 +46,20 @@ const ApiKeyConfig: React.FC<ApiKeyConfigProps> = ({
         <div className="space-y-4">
           <Button
             onClick={onStartSession}
-            disabled={!isValidKey}
+            disabled={!isValidKey || isConnecting}
             className="w-full bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white py-3 rounded-lg shadow-lg transform transition-all duration-200 hover:scale-105"
           >
-            <Key className="w-5 h-5 mr-2" />
-            Start Meditation Session
+            {isConnecting ? (
+              <>
+                <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
+                Connecting...
+              </>
+            ) : (
+              <>
+                <Key className="w-5 h-5 mr-2" />
+                Start Meditation Session
+              </>
+            )}
           </Button>
           
           <div className="text-center text-xs text-gray-500 dark:text-gray-400">

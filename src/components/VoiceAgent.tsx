@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import VoiceSelector from './VoiceSelector';
@@ -183,6 +182,7 @@ const VoiceAgent = () => {
                 onStartSession={handleStartCall}
                 isValidKey={hasValidKey}
                 errorMessage={errorMessage}
+                connectionStatus={connectionStatus}
               />
             )}
           </div>
