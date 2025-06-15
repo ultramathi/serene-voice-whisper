@@ -26,7 +26,7 @@ const MeditationHeader = () => {
         </video>
       </div>
       
-      <h1 className="text-5xl font-light text-white mb-4 tracking-wide">
+      <h1 className="text-5xl font-light text-gray-800 dark:text-white mb-4 tracking-wide">
         Peaceful Mind
       </h1>
       <p className="text-xl text-gray-600 max-w-2xl mx-auto leading-relaxed">
