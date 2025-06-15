@@ -4,7 +4,6 @@ import VoiceAgent from '../components/VoiceAgent';
 import MeditationHeader from '../components/MeditationHeader';
 import FeatureCards from '../components/FeatureCards';
 import ThemeToggle from '../components/ThemeToggle';
-import BreathingTimer from '../components/BreathingTimer';
 
 const Index = () => {
   return (
@@ -16,7 +15,6 @@ const Index = () => {
         <MeditationHeader />
         <div className="max-w-4xl mx-auto">
           <VoiceAgent />
-          <BreathingTimer />
           <FeatureCards />
         </div>
       </div>
