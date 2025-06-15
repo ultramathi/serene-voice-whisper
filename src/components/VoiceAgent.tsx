@@ -4,7 +4,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import VoiceSelector from './VoiceSelector';
 import VideoCarousel from './VideoCarousel';
 import ConnectionStatus from './ConnectionStatus';
-import ApiKeyInput from './ApiKeyInput';
+import ApiKeyConfig from './ApiKeyConfig';
 import ConnectionControls from './ConnectionControls';
 import SessionStatus from './SessionStatus';
 import VolumeControl from './VolumeControl';
@@ -14,14 +14,24 @@ import UnifiedSession from './UnifiedSession';
 import { useVapiConnection } from '../hooks/useVapiConnection';
 import { useVolumeControl } from '../hooks/useVolumeControl';
 import { useSessionManager } from '../hooks/useSessionManager';
+import { useApiKeyStorage } from '../hooks/useApiKeyStorage';
 import { MoodLevel } from '../types/session';
 
 const VoiceAgent = () => {
-  const [apiKey, setApiKey] = useState('');
   const [selectedVoice, setSelectedVoice] = useState('Hana');
   const [currentSessionId, setCurrentSessionId] = useState<string | null>(null);
   const [preSessionMood, setPreSessionMood] = useState<MoodLevel | undefined>();
   const [useUnifiedSession, setUseUnifiedSession] = useState(false);
+  
+  const {
+    apiKey,
+    useCustomKey,
+    customApiKey,
+    updateCustomKey,
+    toggleCustomKey,
+    isValidKey,
+    hasValidKey,
+  } = useApiKeyStorage();
   
   const {
     isConnected,
@@ -42,6 +52,10 @@ const VoiceAgent = () => {
   const voiceVolume = useVolumeControl('voice', 70);
 
   const handleStartCall = () => {
+    if (!hasValidKey) {
+      return;
+    }
+
     // Start the meditation session tracking
     if (preSessionMood) {
       const sessionId = startSession(selectedVoice, preSessionMood);
@@ -137,41 +151,43 @@ const VoiceAgent = () => {
           )}
           
           <div className="flex justify-center mb-8">
-            <Card className="shadow-xl border-0 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm max-w-md w-full">
-              <CardContent className="p-8">
-                <div className="text-center space-y-6">
-                  <div className="space-y-4">
+            {isConnected ? (
+              <Card className="shadow-xl border-0 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm max-w-md w-full">
+                <CardContent className="p-8">
+                  <div className="text-center space-y-6">
                     <ConnectionStatus connectionStatus={connectionStatus} />
-                    
-                    {!isConnected && (
-                      <ApiKeyInput
-                        apiKey={apiKey}
-                        onApiKeyChange={setApiKey}
-                        errorMessage={errorMessage}
-                      />
-                    )}
-                  </div>
 
-                  <div className="flex justify-center space-x-4">
-                    <ConnectionControls
+                    <div className="flex justify-center space-x-4">
+                      <ConnectionControls
+                        isConnected={isConnected}
+                        isMuted={isMuted}
+                        connectionStatus={connectionStatus}
+                        onStartCall={handleStartCall}
+                        onEndCall={handleEndCall}
+                        onToggleMute={toggleMute}
+                      />
+                    </div>
+
+                    <SessionStatus
                       isConnected={isConnected}
-                      isMuted={isMuted}
-                      connectionStatus={connectionStatus}
-                      onStartCall={handleStartCall}
-                      onEndCall={handleEndCall}
-                      onToggleMute={toggleMute}
+                      isSpeaking={isSpeaking}
+                      volumeLevel={volumeLevel}
+                      sessionStartTime={sessionStartTime}
                     />
                   </div>
-
-                  <SessionStatus
-                    isConnected={isConnected}
-                    isSpeaking={isSpeaking}
-                    volumeLevel={volumeLevel}
-                    sessionStartTime={sessionStartTime}
-                  />
-                </div>
-              </CardContent>
-            </Card>
+                </CardContent>
+              </Card>
+            ) : (
+              <ApiKeyConfig
+                useCustomKey={useCustomKey}
+                customApiKey={customApiKey}
+                onToggleCustomKey={toggleCustomKey}
+                onCustomKeyChange={updateCustomKey}
+                onStartSession={handleStartCall}
+                isValidKey={hasValidKey}
+                errorMessage={errorMessage}
+              />
+            )}
           </div>
         </>
       )}
