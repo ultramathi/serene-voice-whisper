@@ -168,6 +168,7 @@ const LivingCanvas = () => {
       const normalizedVolume = validVolume / 100;
       if (isFinite(normalizedVolume)) {
         audio.volume = normalizedVolume;
+        console.log(`Set volume for ${trackId} to ${normalizedVolume}`);
       }
     }
   };
