@@ -2,13 +2,12 @@
 import React, { useState } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import VoiceSelector from './VoiceSelector';
-import VideoCarousel from './VideoCarousel';
+import LivingCanvas from './LivingCanvas';
 import ConnectionStatus from './ConnectionStatus';
 import ApiKeyConfig from './ApiKeyConfig';
 import ConnectionControls from './ConnectionControls';
 import SessionStatus from './SessionStatus';
 import VolumeControl from './VolumeControl';
-import AmbientAudio from './AmbientAudio';
 import SessionManagement from './SessionManagement';
 import UnifiedSession from './UnifiedSession';
 import { useVapiConnection } from '../hooks/useVapiConnection';
@@ -84,9 +83,7 @@ const VoiceAgent = () => {
 
   return (
     <div>
-      <VideoCarousel />
-      
-      <AmbientAudio />
+      <LivingCanvas />
 
       <VoiceSelector
         selectedVoice={selectedVoice}
