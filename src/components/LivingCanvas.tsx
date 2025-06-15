@@ -369,7 +369,7 @@ const LivingCanvas = () => {
 
                     {/* Pulsing animation for active tracks */}
                     {playingTracks.has(track.id) && (
-                      <div className="absolute inset-0 rounded-2xl bg-white/5 animate-pulse" />
+                      <div className="absolute inset-0 rounded-2xl bg-white/5 animate-pulse pointer-events-none" />
                     )}
                   </div>
                 </div>
