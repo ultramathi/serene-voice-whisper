@@ -63,20 +63,36 @@ const LivingCanvas = () => {
     localStorage.setItem('canvasVolumes', JSON.stringify(volumes));
   }, [volumes]);
 
-  const toggleTrack = (trackId: string) => {
+  const toggleTrack = async (trackId: string) => {
     const audio = audioRefs.current[trackId];
-    if (!audio) return;
+    if (!audio) {
+      console.error(`Audio element not found for track: ${trackId}`);
+      return;
+    }
 
-    if (playingTracks.has(trackId)) {
-      audio.pause();
+    try {
+      if (playingTracks.has(trackId)) {
+        console.log(`Pausing track: ${trackId}`);
+        audio.pause();
+        audio.currentTime = 0; // Reset to beginning
+        setPlayingTracks(prev => {
+          const newSet = new Set(prev);
+          newSet.delete(trackId);
+          return newSet;
+        });
+      } else {
+        console.log(`Playing track: ${trackId}`);
+        await audio.play();
+        setPlayingTracks(prev => new Set(prev).add(trackId));
+      }
+    } catch (error) {
+      console.error(`Error toggling track ${trackId}:`, error);
+      // Remove from playing tracks if there was an error
       setPlayingTracks(prev => {
         const newSet = new Set(prev);
         newSet.delete(trackId);
         return newSet;
       });
-    } else {
-      audio.play();
-      setPlayingTracks(prev => new Set(prev).add(trackId));
     }
   };
 
@@ -233,13 +249,26 @@ const LivingCanvas = () => {
                         }
                       }}
                       loop
-                      preload="metadata"
+                      preload="auto"
+                      onLoadedData={() => {
+                        console.log(`Audio loaded for track: ${track.id}`);
+                      }}
+                      onError={(e) => {
+                        console.error(`Audio error for track ${track.id}:`, e);
+                      }}
                       onEnded={() => {
+                        console.log(`Audio ended for track: ${track.id}`);
                         setPlayingTracks(prev => {
                           const newSet = new Set(prev);
                           newSet.delete(track.id);
                           return newSet;
                         });
+                      }}
+                      onPause={() => {
+                        console.log(`Audio paused for track: ${track.id}`);
+                      }}
+                      onPlay={() => {
+                        console.log(`Audio playing for track: ${track.id}`);
                       }}
                     >
                       <source src={track.url} type="audio/mpeg" />
