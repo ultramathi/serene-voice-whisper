@@ -3,7 +3,6 @@ import React, { useState } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useSessionManager } from '../hooks/useSessionManager';
-import SessionHistory from './SessionHistory';
 import SessionGoals from './SessionGoals';
 import MeditationJournal from './MeditationJournal';
 import MoodSelector from './MoodSelector';
@@ -50,17 +49,12 @@ const SessionManagement: React.FC<SessionManagementProps> = ({
   return (
     <Card className="w-full">
       <CardContent className="p-6">
-        <Tabs defaultValue="history" className="w-full">
-          <TabsList className="grid w-full grid-cols-4">
-            <TabsTrigger value="history">History</TabsTrigger>
+        <Tabs defaultValue="goals" className="w-full">
+          <TabsList className="grid w-full grid-cols-3">
             <TabsTrigger value="goals">Goals</TabsTrigger>
             <TabsTrigger value="journal">Journal</TabsTrigger>
             <TabsTrigger value="mood">Mood</TabsTrigger>
           </TabsList>
-
-          <TabsContent value="history" className="mt-6">
-            <SessionHistory sessions={sessions} stats={stats} />
-          </TabsContent>
 
           <TabsContent value="goals" className="mt-6">
             <SessionGoals 
