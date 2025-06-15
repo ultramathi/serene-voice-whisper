@@ -27,7 +27,7 @@ const MeditationHeader = () => {
       </div>
       
       <h1 className="text-5xl font-light text-gray-800 dark:text-white mb-4 tracking-wide">
-        Peaceful Mind
+        Peaceful Mind - Serenity
       </h1>
       <p className="text-xl text-gray-600 max-w-2xl mx-auto leading-relaxed">
         Your personal AI meditation guide. Experience tranquility through gentle voice guidance, 
