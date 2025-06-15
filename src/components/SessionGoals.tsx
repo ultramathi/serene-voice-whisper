@@ -5,17 +5,30 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Progress } from '@/components/ui/progress';
-import { Plus, Target, CheckCircle } from 'lucide-react';
+import { Plus, Target, CheckCircle, Edit, Check, X } from 'lucide-react';
 import { SessionGoal } from '../types/session';
 
 interface SessionGoalsProps {
   goals: SessionGoal[];
   onCreateGoal: (title: string, description: string, targetSessions: number) => void;
+  onUpdateGoal: (goalId: string, title: string, description: string, targetSessions: number) => void;
+  onCompleteGoal: (goalId: string) => void;
 }
 
-const SessionGoals: React.FC<SessionGoalsProps> = ({ goals, onCreateGoal }) => {
+const SessionGoals: React.FC<SessionGoalsProps> = ({ 
+  goals, 
+  onCreateGoal, 
+  onUpdateGoal, 
+  onCompleteGoal 
+}) => {
   const [showCreateForm, setShowCreateForm] = useState(false);
+  const [editingGoal, setEditingGoal] = useState<string | null>(null);
   const [newGoal, setNewGoal] = useState({
+    title: '',
+    description: '',
+    targetSessions: 7
+  });
+  const [editGoal, setEditGoal] = useState({
     title: '',
     description: '',
     targetSessions: 7
@@ -27,6 +40,27 @@ const SessionGoals: React.FC<SessionGoalsProps> = ({ goals, onCreateGoal }) => {
       setNewGoal({ title: '', description: '', targetSessions: 7 });
       setShowCreateForm(false);
     }
+  };
+
+  const handleEditGoal = (goal: SessionGoal) => {
+    setEditingGoal(goal.id);
+    setEditGoal({
+      title: goal.title,
+      description: goal.description,
+      targetSessions: goal.targetSessions
+    });
+  };
+
+  const handleUpdateGoal = (goalId: string) => {
+    if (editGoal.title.trim()) {
+      onUpdateGoal(goalId, editGoal.title, editGoal.description, editGoal.targetSessions);
+      setEditingGoal(null);
+    }
+  };
+
+  const handleCancelEdit = () => {
+    setEditingGoal(null);
+    setEditGoal({ title: '', description: '', targetSessions: 7 });
   };
 
   const getProgressPercentage = (goal: SessionGoal) => {
@@ -103,37 +137,98 @@ const SessionGoals: React.FC<SessionGoalsProps> = ({ goals, onCreateGoal }) => {
                     : 'bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700'
                 }`}
               >
-                <div className="flex items-start justify-between mb-2">
-                  <div className="flex-1">
-                    <h4 className="font-medium flex items-center gap-2">
-                      {goal.completedAt && <CheckCircle className="w-4 h-4 text-green-500" />}
-                      {goal.title}
-                    </h4>
-                    {goal.description && (
-                      <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
-                        {goal.description}
-                      </p>
-                    )}
+                {editingGoal === goal.id ? (
+                  <div className="space-y-3">
+                    <Input
+                      value={editGoal.title}
+                      onChange={(e) => setEditGoal({ ...editGoal, title: e.target.value })}
+                      placeholder="Goal title"
+                    />
+                    <Textarea
+                      value={editGoal.description}
+                      onChange={(e) => setEditGoal({ ...editGoal, description: e.target.value })}
+                      placeholder="Description (optional)"
+                      rows={2}
+                    />
+                    <div className="flex items-center gap-2">
+                      <label className="text-sm font-medium">Target sessions:</label>
+                      <Input
+                        type="number"
+                        min="1"
+                        max="365"
+                        value={editGoal.targetSessions}
+                        onChange={(e) => setEditGoal({ ...editGoal, targetSessions: parseInt(e.target.value) || 1 })}
+                        className="w-20"
+                      />
+                    </div>
+                    <div className="flex gap-2">
+                      <Button onClick={() => handleUpdateGoal(goal.id)} size="sm">
+                        <Check className="w-4 h-4 mr-1" />
+                        Save
+                      </Button>
+                      <Button onClick={handleCancelEdit} variant="outline" size="sm">
+                        <X className="w-4 h-4 mr-1" />
+                        Cancel
+                      </Button>
+                    </div>
                   </div>
-                </div>
-                
-                <div className="space-y-2">
-                  <div className="flex justify-between text-sm">
-                    <span>Progress</span>
-                    <span>
-                      {goal.completedSessions} / {goal.targetSessions} sessions
-                    </span>
-                  </div>
-                  <Progress 
-                    value={getProgressPercentage(goal)} 
-                    className="h-2"
-                  />
-                  {goal.completedAt && (
-                    <p className="text-sm text-green-600 dark:text-green-400">
-                      ✅ Completed on {goal.completedAt.toLocaleDateString()}
-                    </p>
-                  )}
-                </div>
+                ) : (
+                  <>
+                    <div className="flex items-start justify-between mb-2">
+                      <div className="flex-1">
+                        <h4 className="font-medium flex items-center gap-2">
+                          {goal.completedAt && <CheckCircle className="w-4 h-4 text-green-500" />}
+                          {goal.title}
+                        </h4>
+                        {goal.description && (
+                          <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
+                            {goal.description}
+                          </p>
+                        )}
+                      </div>
+                      {!goal.completedAt && (
+                        <div className="flex gap-2">
+                          <Button
+                            onClick={() => handleEditGoal(goal)}
+                            variant="ghost"
+                            size="sm"
+                          >
+                            <Edit className="w-4 h-4" />
+                          </Button>
+                          {goal.completedSessions >= goal.targetSessions && (
+                            <Button
+                              onClick={() => onCompleteGoal(goal.id)}
+                              variant="default"
+                              size="sm"
+                              className="bg-green-600 hover:bg-green-700"
+                            >
+                              <CheckCircle className="w-4 h-4 mr-1" />
+                              Complete
+                            </Button>
+                          )}
+                        </div>
+                      )}
+                    </div>
+                    
+                    <div className="space-y-2">
+                      <div className="flex justify-between text-sm">
+                        <span>Progress</span>
+                        <span>
+                          {goal.completedSessions} / {goal.targetSessions} sessions
+                        </span>
+                      </div>
+                      <Progress 
+                        value={getProgressPercentage(goal)} 
+                        className="h-2"
+                      />
+                      {goal.completedAt && (
+                        <p className="text-sm text-green-600 dark:text-green-400">
+                          ✅ Completed on {goal.completedAt.toLocaleDateString()}
+                        </p>
+                      )}
+                    </div>
+                  </>
+                )}
               </div>
             ))}
           </div>

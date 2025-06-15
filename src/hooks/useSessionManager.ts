@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { 
   MeditationSession, 
@@ -132,6 +131,32 @@ export const useSessionManager = () => {
     return newGoal;
   };
 
+  const updateGoal = (goalId: string, title: string, description: string, targetSessions: number) => {
+    setGoals(prev => prev.map(goal => {
+      if (goal.id === goalId) {
+        return {
+          ...goal,
+          title,
+          description,
+          targetSessions
+        };
+      }
+      return goal;
+    }));
+  };
+
+  const completeGoal = (goalId: string) => {
+    setGoals(prev => prev.map(goal => {
+      if (goal.id === goalId) {
+        return {
+          ...goal,
+          completedAt: new Date()
+        };
+      }
+      return goal;
+    }));
+  };
+
   const updateGoalProgress = () => {
     const completedSessionsCount = sessions.filter(s => s.endTime).length;
     
@@ -222,6 +247,8 @@ export const useSessionManager = () => {
     startSession,
     endSession,
     createGoal,
+    updateGoal,
+    completeGoal,
     addJournalEntry,
     deleteJournalEntry,
     getSessionStats

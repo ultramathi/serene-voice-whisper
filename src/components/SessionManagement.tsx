@@ -28,6 +28,8 @@ const SessionManagement: React.FC<SessionManagementProps> = ({
     startSession,
     endSession,
     createGoal,
+    updateGoal,
+    completeGoal,
     addJournalEntry,
     deleteJournalEntry,
     getSessionStats
@@ -60,6 +62,8 @@ const SessionManagement: React.FC<SessionManagementProps> = ({
             <SessionGoals 
               goals={goals} 
               onCreateGoal={createGoal}
+              onUpdateGoal={updateGoal}
+              onCompleteGoal={completeGoal}
             />
           </TabsContent>
 
