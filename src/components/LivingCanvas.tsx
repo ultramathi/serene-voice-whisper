@@ -1,4 +1,3 @@
-
 import React, { useState, useRef, useEffect } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -77,7 +76,29 @@ const LivingCanvas = () => {
   const [playingTracks, setPlayingTracks] = useState<Set<string>>(new Set());
   const [volumes, setVolumes] = useState<Record<string, number>>(() => {
     const saved = localStorage.getItem('canvasVolumes');
-    return saved ? JSON.parse(saved) : ambientTracks.reduce((acc, track) => ({ ...acc, [track.id]: 50 }), {});
+    let savedVolumes = {};
+    
+    try {
+      savedVolumes = saved ? JSON.parse(saved) : {};
+    } catch (error) {
+      console.warn('Failed to parse saved volumes, using defaults');
+      savedVolumes = {};
+    }
+    
+    // Create default volumes and merge with saved volumes
+    const defaultVolumes = ambientTracks.reduce((acc, track) => ({ ...acc, [track.id]: 50 }), {});
+    
+    // Merge saved volumes with defaults, ensuring all tracks have valid volume values
+    const mergedVolumes = { ...defaultVolumes };
+    
+    Object.keys(savedVolumes).forEach(trackId => {
+      const savedVolume = savedVolumes[trackId];
+      if (typeof savedVolume === 'number' && !isNaN(savedVolume) && isFinite(savedVolume)) {
+        mergedVolumes[trackId] = Math.max(0, Math.min(100, savedVolume));
+      }
+    });
+    
+    return mergedVolumes;
   });
   const [showVideoSelector, setShowVideoSelector] = useState(false);
   const [showFullscreen, setShowFullscreen] = useState(false);
@@ -137,10 +158,17 @@ const LivingCanvas = () => {
   };
 
   const setTrackVolume = (trackId: string, volume: number) => {
-    setVolumes(prev => ({ ...prev, [trackId]: volume }));
+    // Validate volume value
+    const validVolume = Math.max(0, Math.min(100, volume));
+    
+    setVolumes(prev => ({ ...prev, [trackId]: validVolume }));
+    
     const audio = audioRefs.current[trackId];
     if (audio) {
-      audio.volume = volume / 100;
+      const normalizedVolume = validVolume / 100;
+      if (isFinite(normalizedVolume)) {
+        audio.volume = normalizedVolume;
+      }
     }
   };
 
@@ -287,14 +315,14 @@ const LivingCanvas = () => {
                     <div className="flex items-center space-x-2">
                       <Volume2 className="h-3 w-3 text-white/80" />
                       <Slider
-                        value={[volumes[track.id]]}
+                        value={[volumes[track.id] || 50]}
                         onValueChange={(value) => setTrackVolume(track.id, value[0])}
                         max={100}
                         step={1}
                         className="flex-1"
                       />
                       <span className="text-xs text-white/80 w-8 text-right">
-                        {volumes[track.id]}%
+                        {volumes[track.id] || 50}%
                       </span>
                     </div>
 
@@ -303,7 +331,13 @@ const LivingCanvas = () => {
                       ref={(el) => {
                         if (el) {
                           audioRefs.current[track.id] = el;
-                          el.volume = volumes[track.id] / 100;
+                          // Ensure we have a valid volume value before setting it
+                          const trackVolume = volumes[track.id];
+                          if (typeof trackVolume === 'number' && isFinite(trackVolume)) {
+                            el.volume = Math.max(0, Math.min(1, trackVolume / 100));
+                          } else {
+                            el.volume = 0.5; // Default to 50%
+                          }
                         }
                       }}
                       loop
